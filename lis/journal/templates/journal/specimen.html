@@ -1,0 +1,17 @@
+{% extends 'journal/base.html' %}
+{% block table %}
+<a href="{% url 'work_journal' specimen.division.id %}">&larr;назад в журнал</a>
+<h1>{{patient.last_name}} {{patient.first_name}}</h1>
+<table class="table">
+<thead><tr><td>Название теста</td><td>Результат</td><td>Статус работы</td></tr> </thead>
+{% for result in results %}
+<tbody><tr>
+<td>{{result.measurement.name}}</td>
+<td>{{result.value}} </td>
+<td>{{result.state}} </td>
+
+</tr></tbody>
+{% endfor %}
+
+</table>
+{% endblock %}

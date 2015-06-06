@@ -8,6 +8,7 @@
     <nav class="navbar navbar-default navbar-static-top">
       <div class="container">
         <ul class="nav navbar-nav">
+            <li><a href="{% url 'create_application' %}">+</a></li>
             <li class="active"><a href="{% url 'registration_journal'%}">Заявки</a>
             </li>
             <li><a href="{% url 'patients_journal' %}">Пациенты</a></li>
@@ -21,6 +22,10 @@
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 {% block table %}
+                 {% endblock %}
+            </div>
+            <div class="col-md-6 col-md-offset-3">
+                {% block registration %}
                  {% endblock %}
             </div>
         </div>

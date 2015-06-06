@@ -1,0 +1,10 @@
+{% extends 'journal/base.html' %}
+{% block registration %}
+
+<form action="/contact/" method="post">{% csrf_token %}
+{{userlistform.as_p}}
+<input type="submit" value="Submit" />
+</form>
+
+
+{% endblock %}
