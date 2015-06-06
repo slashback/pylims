@@ -1,11 +1,15 @@
-<html>
-<head><title>PatientJournal</title></head>
-<body>
-<ul>
-{% for patient in patients %}
-<li>{{patient.last_name}}</li>
+{% extends 'journal/base.html' %}
 
+{% block table %}
+<table class="table">
+<thead><tr><td>ФИО пациента</td><td>Дата рождения</td></tr> </thead>
+{% for patient in patients %}
+<tbody><tr>
+<td>{{patient.last_name}} {{patient.first_name}} {{patient.middle_name}}</td>
+<td>{{patient.birth_date}} </td>
+
+</tr></tbody>
 {% endfor %}
-</ul>
-</body>
-</html>
+
+</table>
+{% endblock %}

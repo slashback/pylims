@@ -1,5 +1,5 @@
 from django.db import models
-from dictionary.models import Biomaterial, Measurement
+from dictionary.models import Biomaterial, Measurement, Division
 
 
 class Patient(models.Model):
@@ -15,22 +15,23 @@ class Patient(models.Model):
 class Application(models.Model):
     internal_nr = models.CharField(max_length=64)
     state = models.IntegerField()
-    patient = models.ForeignKey('Patient')
+    patient = models.ForeignKey(Patient)
     def __str__(self):
         return self.internal_nr
 
 
 class Specimen(models.Model):
     internal_nr = models.CharField(max_length=64)
-    application = models.ForeignKey('Application')
+    application = models.ForeignKey(Application)
     biomaterial = models.ForeignKey(Biomaterial)
     state = models.IntegerField()
+    division = models.ForeignKey(Division)
     def __str__(self):
         return self.internal_nr
 
 
 class MeasurementResult(models.Model):
-    specimen = models.ForeignKey('Specimen')
+    specimen = models.ForeignKey(Specimen)
     measurement = models.ForeignKey(Measurement)
     state = models.IntegerField()
     value = models.CharField(max_length=64)
