@@ -2,16 +2,28 @@
 {% block table %}
 <a href="{% url 'work_journal' specimen.division.id %}">&larr;назад в журнал</a>
 <h1>{{patient.last_name}} {{patient.first_name}}</h1>
+<form method='POST' action="{% url 'specimen_save' %}">
+{% csrf_token %} 
 <table class="table">
 <thead><tr><td>Название теста</td><td>Результат</td><td>Статус работы</td></tr> </thead>
 {% for result in results %}
 <tbody><tr>
 <td>{{result.measurement.name}}</td>
-<td>{{result.value}} </td>
+<td><input type="text" name="{{result.id}}" value="{{result.value}}" /> </td>
 <td>{{result.state}} </td>
+<td><input name="your_name" value="your_value" type="checkbox"></td>
 
 </tr></tbody>
 {% endfor %}
 
 </table>
+<button>Сохранить</button>
+</form>
+
+<form action="/" method="post">{% csrf_token %}
+{{mform.as_p}}
+<input type="submit" value="Submit" />
+</form>
+
+
 {% endblock %}
