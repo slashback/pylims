@@ -1,4 +1,5 @@
 {% load journal_tags %}
+{% load navigation %}
 <html>
     <head>
     <title>Journal</title>
@@ -9,10 +10,10 @@
     <nav class="navbar navbar-default navbar-static-top">
       <div class="container">
         <ul class="nav navbar-nav">
-            <li><a href="{% url 'application_form' %}">+</a></li>
-            <li class="active"><a href="{% url 'registration_journal'%}">Заявки</a>
+            <li class="{% navactive request 'application_form' %}"><a href="{% url 'application_form' %}">+</a></li>
+            <li class="{% navactive request 'registration_journal' %}"><a href="{% url 'registration_journal'%}">Заявки</a>
             </li>
-            <li><a href="{% url 'patients_journal' %}">Пациенты</a></li>
+            <li class="{% navactive request 'patients_journal' %}"><a href="{% url 'patients_journal' %}">Пациенты</a></li>
             {% division_list %}
 
           </ul>
