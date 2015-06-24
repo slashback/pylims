@@ -43,8 +43,10 @@ def specimen_info(request, specimen_id):
 def application_form(request):
     tests = Measurement.objects.all()
     test_list = RegistrationForm()
-
+    test_list.fields['first_name']
     test_list.fields['tests'].choices = [(x.id, x) for x in tests]
+    biomaterials = Biomaterial.objects.all()
+    test_list.fields['biomaterials'].choices = [(x.id, x) for x in biomaterials]
     return render(request,
                   'journal/registration_form.html',
                   {"test_list": test_list})
@@ -65,14 +67,17 @@ def create_application(request):
                                      gender=gender,
                                      birth_date=birth_date
                                      )
-    internal_nr = '2345+'
-    #номер заявки состоит из двух частей - даты и порядкового номера
-    current_date = date.today()
-    current_date.strftime('%d%m%Y')
+#    номер заявки состоит из двух частей - даты и порядкового номера за день
+    today = date.today()
+    numpart = Application.objects.filter(registration_date=today).count()
+    numpart += 1
+    datepart = str(today.strftime('%d%m%y'))
+    internal_nr = datepart + format(numpart, '04d')
 
     application = Application.objects.create(internal_nr=internal_nr,
                                              state='0',
-                                             patient=patient
+                                             patient=patient,
+                                             registration_date=today
                                              )
     specimen = Specimen.objects.create(internal_nr=internal_nr,
                                        application=application,
