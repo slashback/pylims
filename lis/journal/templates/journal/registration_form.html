@@ -2,8 +2,12 @@
 {% block registration %}
 
 <form action="{% url 'create_application' %}" method="post">{% csrf_token %}
-{{test_list.as_p}}
-<input type="submit" value="Submit" />
+<table class="table">
+{{test_list.as_table}}
+
+</table>
+
+<input type="submit" value="Сохранить" />
 </form>
 
 
