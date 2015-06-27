@@ -44,9 +44,9 @@ class Specimen(models.Model):
 
 class MeasurementResult(models.Model):
     specimen = models.ForeignKey(Specimen)
-    measurement = models.ForeignKey(Measurement)
+    measurement = models.ForeignKey(Measurement, verbose_name='Тест')
     state = models.IntegerField()
-    value = models.CharField(default='', max_length=64)
+    value = models.CharField(default='', max_length=64, verbose_name='Результат')
 
     def __str__(self):
-        return self.values
+        return self.value

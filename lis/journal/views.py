@@ -2,8 +2,10 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from journal.models import Patient, Application, Specimen, MeasurementResult
 from dictionary.models import Division, Measurement, Biomaterial
-from journal.forms import RegistrationForm, MeasurementResultForm
+from journal.forms import RegistrationForm, MeasurementResultForm,FooFormSet
 from datetime import date
+from django.forms.formsets import formset_factory
+
 
 
 def patients_journal(request):
@@ -24,19 +26,6 @@ def work_journal(request, division_id):
     specimens = Specimen.objects.filter(division=division_id)
     return render(request, 'journal/work_journal.html',
                   {'specimens': specimens}
-                  )
-
-
-def specimen_info(request, specimen_id):
-    specimen = Specimen.objects.get(id=specimen_id)
-    patient = specimen.application.patient
-    results = MeasurementResult.objects.filter(specimen=specimen_id)
-    mform = MeasurementResultForm()
-    return render(request, 'journal/specimen.html',
-                  {'results': results,
-                   'patient': patient,
-                   'specimen': specimen,
-                   'mform': mform}
                   )
 
 
@@ -95,21 +84,44 @@ def create_application(request):
     return redirect('/')
 
 
-def specimen_save(request):
+def specimen_info(request, specimen_id):
+    specimen = Specimen.objects.get(id=specimen_id)
+    patient = specimen.application.patient
+    results = MeasurementResult.objects.filter(specimen=specimen_id)
+    result = results[0]
+    print(request.method)
+    #mform = MeasurementResultForm(instance=result)
+    #MeasurementResultFormSet = formset_factory(MeasurementResultForm, extra=5)
+    ##mform = MeasurementResultFormSet(results)
+    mform = FooFormSet(queryset=results)
+    #queryset=Author.objects.all()
+    #mform = MeasurementResultForm()
+    return render(request, 'journal/specimen.html',
+                  {'results': results,
+                   'patient': patient,
+                   'specimen': specimen,
+                   'mform': mform}
+                  )
+
+
+def specimen_save(request, specimen_id):
     data = request.POST
-    print(data)
-    for test_id in data:
-        if test_id != 'csrfmiddlewaretoken':
-            result = MeasurementResult.objects.get(id=test_id)
-            specimen = result.specimen
-            value = data.get(test_id, '')
-            result.value = value
-            if value:
-                result.state = 3
-            else:
-                result.state = 1
-            #result.save()
-    return(redirect('/specimen/%d/' % (specimen.id,)))
+    formset = FooFormSet(request.POST)
+    for form in formset.forms:
+        form.save()
+
+    '''for test_id in data:
+                    if test_id != 'csrfmiddlewaretoken':
+                        result = MeasurementResult.objects.get(id=test_id)
+                        specimen = result.specimen
+                        value = data.get(test_id, '')
+                        result.value = value
+                        if value:
+                            result.state = 3
+                        else:
+                            result.state = 1
+                        #result.save()'''
+    return(redirect('/specimen/%s/' % (specimen_id,)))
 
 
 def home(request):

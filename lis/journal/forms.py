@@ -3,6 +3,7 @@ from datetime import date
 from journal.models import MeasurementResult
 from django.utils.safestring import mark_safe
 from django.forms.widgets import flatatt
+from django.forms.models import modelformset_factory
 
 
 class RegistrationForm(forms.Form):
@@ -35,8 +36,8 @@ class SpanWidget(forms.Widget):
 
     def render(self, name, value, attrs=None):
         final_attrs = self.build_attrs(attrs, name=name)
-        return mark_safe(u'<span%s >booooo%s</span>' % (
-            flatatt(final_attrs), self.original_value))
+        return mark_safe(u'<span>%s</span>' % (
+            self.original_value))
 
     def value_from_datadict(self, data, files, name):
         return self.original_value
@@ -118,6 +119,25 @@ class MeasurementResultForm(ReadonlyModelForm):
     class Meta:
         model = MeasurementResult
         fields = ['measurement', 'value']
+    def clean(self):
+        super(MeasurementResultForm, self).clean() #if necessary
+        if 'measurement' in self._errors:
+            del self._errors['measurement']
+        return self.cleaned_data
 
     class NewMeta:
-        readonly = ('value',)
+        readonly = ('measurement',)
+
+
+FooFormSetBase = modelformset_factory(
+  MeasurementResult, extra=0, form=MeasurementResultForm)
+''', form=MeasurementResultForm'''
+
+
+class FooFormSet(FooFormSetBase):
+  # this is where you can add additional fields to a ModelFormSet
+  # this is also where you can change stuff about the auto generated form
+  def add_fields(self, form, index):
+    super(FooFormSet, self).add_fields(form, index)
+    form.fields['is_checked'] = forms.BooleanField(required=False, label='')
+    #form.fields['somefield'].widget.attrs['class'] = 'somefieldclass'
