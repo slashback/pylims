@@ -1,0 +1,1 @@
+A laboratory information system implementation
