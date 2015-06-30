@@ -2,7 +2,6 @@ from django import forms
 from datetime import date
 from journal.models import MeasurementResult
 from django.utils.safestring import mark_safe
-from django.forms.widgets import flatatt
 from django.forms.models import modelformset_factory
 
 
@@ -35,7 +34,6 @@ class SpanWidget(forms.Widget):
     '''
 
     def render(self, name, value, attrs=None):
-        final_attrs = self.build_attrs(attrs, name=name)
         return mark_safe(u'<span>%s</span>' % (
             self.original_value))
 
@@ -76,42 +74,10 @@ class Readonly(object):
 
 
 class ReadonlyForm(Readonly, forms.ModelForm):
-    '''A form which provides the ability to specify certain fields as
-    readonly, meaning that they will display their value as text wrapped
-    with a <span> tag. The user is unable to edit them, and they are
-    protected from POST data insertion attacks.
-
-    The recommended usage is to place a NewMeta inner class on the
-    form, with a readonly attribute which is a list or tuple of fields,
-    similar to the fields and exclude attributes on the Meta inner class.
-
-        class MyForm(ReadonlyForm):
-            foo = forms.TextField()
-            class NewMeta:
-                readonly = ('foo',)
-    '''
     pass
 
 
 class ReadonlyModelForm(Readonly, forms.ModelForm):
-    '''A ModelForm which provides the ability to specify certain fields as
-    readonly, meaning that they will display their value as text wrapped
-    with a <span> tag. The user is unable to edit them, and they are
-    protected from POST data insertion attacks.
-
-    The recommended usage is to place a NewMeta inner class on the
-    form, with a readonly attribute which is a list or tuple of fields,
-    similar to the fields and exclude attributes on the Meta inner class.
-
-        class Foo(models.Model):
-            bar = models.CharField(max_length=24)
-
-        class MyForm(ReadonlyModelForm):
-            class Meta:
-                model = Foo
-            class NewMeta:
-                readonly = ('bar',)
-    '''
     pass
 
 
@@ -119,25 +85,22 @@ class MeasurementResultForm(ReadonlyModelForm):
     class Meta:
         model = MeasurementResult
         fields = ['measurement', 'value']
-    def clean(self):
-        super(MeasurementResultForm, self).clean() #if necessary
-        if 'measurement' in self._errors:
-            del self._errors['measurement']
-        return self.cleaned_data
 
     class NewMeta:
         readonly = ('measurement',)
 
+    def clean(self):
+        super(MeasurementResultForm, self).clean()
+        if 'measurement' in self._errors:
+            del self._errors['measurement']
+        return self.cleaned_data
 
-FooFormSetBase = modelformset_factory(
+
+ResultFormSetBase = modelformset_factory(
   MeasurementResult, extra=0, form=MeasurementResultForm)
-''', form=MeasurementResultForm'''
 
 
-class FooFormSet(FooFormSetBase):
-  # this is where you can add additional fields to a ModelFormSet
-  # this is also where you can change stuff about the auto generated form
-  def add_fields(self, form, index):
-    super(FooFormSet, self).add_fields(form, index)
-    form.fields['is_checked'] = forms.BooleanField(required=False, label='')
-    #form.fields['somefield'].widget.attrs['class'] = 'somefieldclass'
+class ResultFormSet(ResultFormSetBase):
+    def add_fields(self, form, index):
+        super(ResultFormSet, self).add_fields(form, index)
+        form.fields['is_checked'] = forms.BooleanField(required=False, label='')

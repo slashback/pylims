@@ -2,38 +2,35 @@
 {% block table %}
 <a href="{% url 'work_journal' specimen.division.id %}">&larr;назад в журнал</a>
 <h1>{{patient.last_name}} {{patient.first_name}}</h1>
-
-<form action="{% url 'specimen_save' specimen.id %}" method="post">{% csrf_token %}
-
-{{ mform.management_form }}
-
-<table id="formset" class="table">
-{% for form in mform.forms %}
-  {% if forloop.first %}
-  <thead><tr>
-    {% for field in form.visible_fields %}
-    <th>{{ field.label|capfirst }}</th>
-    {% endfor %}
-  </tr></thead>
-  {% endif %}
-  <tr>
-  {% for field in form.visible_fields %}
-    <td>
-    {# Include the hidden fields in the form #}
-    {% if forloop.first %}
-      {% for hidden in form.hidden_fields %}
-      {{ hidden }}
-      {% endfor %}
-    {% endif %}
-      {{ field.errors.as_ul }}
-      {{ field }}
-    </td>
-  {% endfor %}
-  </tr>
-{% endfor %}
-</table>
-<input type="submit" value="Сохранить" />
+<form action="{% url 'specimen_save' specimen.id %}" method="post">
+    {% csrf_token %}
+    {{ result_form.management_form }}
+    <table id="formset" class="table">
+        {% for form in result_form.forms %}
+        {% if forloop.first %}
+        <thead>
+            <tr>
+                {% for field in form.visible_fields %}
+                <th>{{ field.label|capfirst }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        {% endif %}
+        <tr>
+            {% for field in form.visible_fields %}
+            <td>
+                {% if forloop.first %}
+                  {% for hidden in form.hidden_fields %}
+                  {{ hidden }}
+                  {% endfor %}
+                {% endif %}
+                {{ field.errors.as_ul }}
+                {{ field }}
+            </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    <input type="submit" value="Сохранить" />
 </form>
-
-
 {% endblock %}

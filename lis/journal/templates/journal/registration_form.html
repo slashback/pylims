@@ -1,14 +1,12 @@
 {% extends 'journal/base.html' %}
 {% block registration %}
 
-<form action="{% url 'create_application' %}" method="post">{% csrf_token %}
-<table class="table">
-{{test_list.as_table}}
-
-</table>
-
-<input type="submit" value="Сохранить" />
+<form action="{% url 'create_application' %}" method="post">
+    {% csrf_token %}
+    <table class="table">
+    {{test_list.as_table}}
+    </table>
+    <input type="submit" value="Сохранить" />
 </form>
-
 
 {% endblock %}

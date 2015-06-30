@@ -1,21 +1,28 @@
 {% extends 'journal/base.html' %}
-
 {% block table %}
+
 <table class="table">
-<thead><tr><td>№ заявки</td><td>Фио пациента</td><td>Пол</td><td>Дата&nbsp;рождения</td></tr> </thead>
-{% for specimen in specimens %}
-<tbody><tr>
-<td><a href="{% url 'specimen_info' specimen.id %}">{{specimen.internal_nr}}</a></td>
-<td>{{specimen.application.patient.last_name}} 
-    {{specimen.application.patient.first_name}} 
-    {{specimen.application.patient.middle_name}} </td>
-    <td>{{specimen.application.patient.get_gender_display}}</td>
-    <td>{{specimen.application.patient.birth_date|date:"d.m.Y"}}</td>
+    <thead>
+        <tr>
+            <td>№ заявки</td>
+            <td>Фио пациента</td>
+            <td>Пол</td>
+            <td>Дата&nbsp;рождения</td>
+        </tr>
+    </thead>
+    <tbody>
+    {% for specimen in specimens %}
+        <tr>
+            <td><a href="{% url 'specimen_info' specimen.id %}">{{specimen.internal_nr}}</a></td>
+            <td>{{specimen.application.patient.last_name}} 
+                {{specimen.application.patient.first_name}} 
+                {{specimen.application.patient.middle_name}} </td>
+            <td>{{specimen.application.patient.get_gender_display}}</td>
+            <td>{{specimen.application.patient.birth_date|date:"d.m.Y"}}</td>
 
-</tr></tbody>
-{% endfor %}
-
+        </tr>
+    {% endfor %}
+    </tbody>
 </table>
-
 {% endblock %}
 

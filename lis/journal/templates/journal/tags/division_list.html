@@ -1,3 +1,5 @@
 {% for division in divisions %}
-        <li><a href="{% url 'work_journal' division.id %}">{{division.name}}</a></li>
-    {% endfor %}
+    <li>
+        <a href="{% url 'work_journal' division.id %}">{{division.name}}</a>
+    </li>
+{% endfor %}

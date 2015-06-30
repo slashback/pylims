@@ -1,11 +1,8 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from journal.models import Patient, Application, Specimen, MeasurementResult
 from dictionary.models import Division, Measurement, Biomaterial
-from journal.forms import RegistrationForm, MeasurementResultForm,FooFormSet
+from journal.forms import RegistrationForm, ResultFormSet
 from datetime import date
-from django.forms.formsets import formset_factory
-
 
 
 def patients_journal(request):
@@ -75,7 +72,6 @@ def create_application(request):
                                        biomaterial=bm
                                        )
     for test_id in tests:
-        print(test_id)
         measurement = Measurement.objects.get(id=test_id)
         MeasurementResult.objects.create(specimen=specimen,
                                          measurement=measurement,
@@ -88,39 +84,19 @@ def specimen_info(request, specimen_id):
     specimen = Specimen.objects.get(id=specimen_id)
     patient = specimen.application.patient
     results = MeasurementResult.objects.filter(specimen=specimen_id)
-    result = results[0]
-    print(request.method)
-    #mform = MeasurementResultForm(instance=result)
-    #MeasurementResultFormSet = formset_factory(MeasurementResultForm, extra=5)
-    ##mform = MeasurementResultFormSet(results)
-    mform = FooFormSet(queryset=results)
-    #queryset=Author.objects.all()
-    #mform = MeasurementResultForm()
+    result_form = ResultFormSet(queryset=results)
     return render(request, 'journal/specimen.html',
                   {'results': results,
                    'patient': patient,
                    'specimen': specimen,
-                   'mform': mform}
+                   'result_form': result_form}
                   )
 
 
 def specimen_save(request, specimen_id):
-    data = request.POST
-    formset = FooFormSet(request.POST)
+    formset = ResultFormSet(request.POST)
     for form in formset.forms:
         form.save()
-
-    '''for test_id in data:
-                    if test_id != 'csrfmiddlewaretoken':
-                        result = MeasurementResult.objects.get(id=test_id)
-                        specimen = result.specimen
-                        value = data.get(test_id, '')
-                        result.value = value
-                        if value:
-                            result.state = 3
-                        else:
-                            result.state = 1
-                        #result.save()'''
     return(redirect('/specimen/%s/' % (specimen_id,)))
 
 

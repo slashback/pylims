@@ -1,14 +1,20 @@
 {% extends 'journal/base.html' %}
 {% block table %}
 <table class="table">
-<thead><tr><td>№ заявки</td><td>Фио пациента</td></tr> </thead>
-{% for application in applications %}
-<tbody><tr>
-<td>{{application.internal_nr}}</td>
-<td>{{application.patient.last_name}} </td>
-
-</tr></tbody>
-{% endfor %}
-
+    <thead>
+        <tr>
+            <td>№ заявки</td>
+            <td>Фио пациента</td>
+        </tr>
+    </thead>
+    
+    <tbody>
+        {% for application in applications %}
+        <tr>
+            <td>{{application.internal_nr}}</td>
+            <td>{{application.patient.last_name}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
 {% endblock %}

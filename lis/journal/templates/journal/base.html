@@ -2,39 +2,37 @@
 {% load navigation %}
 <html>
     <head>
-    <title>Journal</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <title>Рабочий журнал</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
     </head>
     <body>
-    <nav class="navbar navbar-default navbar-static-top">
-      <div class="container">
-        <ul class="nav navbar-nav">
-            <li class="{% navactive request 'application_form' %}"><a href="{% url 'application_form' %}">+</a></li>
-            <li class="{% navactive request 'registration_journal' %}"><a href="{% url 'registration_journal'%}">Заявки</a>
-            </li>
-            <li class="{% navactive request 'patients_journal' %}"><a href="{% url 'patients_journal' %}">Пациенты</a></li>
-            {% division_list %}
-
-          </ul>
-      </div>
-    </nav>
-        <div class="row">
-            <div class="col-md-6 col-md-offset-3">
-                {% block table %}
-                 {% endblock %}
-            </div>
-            <div class="col-md-6 col-md-offset-3">
-                {% block registration %}
-                 {% endblock %}
+        <nav class="navbar navbar-default navbar-static-top">
+          <div class="container">
+            <ul class="nav navbar-nav">
+                <li class="{% navactive request 'application_form' %}">
+                    <a href="{% url 'application_form' %}">+</a>
+                </li>
+                <li class="{% navactive request 'registration_journal' %}">
+                    <a href="{% url 'registration_journal'%}">Заявки</a>
+                </li>
+                <li class="{% navactive request 'patients_journal' %}">
+                    <a href="{% url 'patients_journal' %}">Пациенты</a>
+                </li>
+                {% division_list %}
+              </ul>
+          </div>
+        </nav>
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    {% block table %}
+                    {% endblock %}
+                </div>
+                <div class="col-md-6 col-md-offset-3">
+                    {% block registration %}
+                    {% endblock %}
+                </div>
             </div>
         </div>
-    </div>
-
-
-
-        
-        
     </body>
-
 </html>
